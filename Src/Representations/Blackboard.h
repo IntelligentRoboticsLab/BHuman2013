@@ -61,6 +61,7 @@ class BodyContour;
 class ColorReference;
 class FieldBoundary;
 class ObstacleSpots;
+class VisualPole;
 
 // Modeling
 class ArmContactModel;
@@ -193,6 +194,7 @@ protected:
   const ColorReference& theColorReference;
   const FieldBoundary& theFieldBoundary;
   const ObstacleSpots& theObstacleSpots;
+  const VisualPole& theVisualPole;
 
   // Modeling
   const ArmContactModel& theArmContactModel;

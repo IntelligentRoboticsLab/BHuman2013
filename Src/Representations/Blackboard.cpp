@@ -60,6 +60,7 @@ Blackboard::Blackboard() :
   theColorReference(theColorReference),
   theFieldBoundary(theFieldBoundary),
   theObstacleSpots(theObstacleSpots),
+  theVisualPole(theVisualPole),
 
 // Modeling
   theArmContactModel(theArmContactModel),
