@@ -1,56 +1,40 @@
 #include "VisualCompassFeature.h"
 
-VisualCompassFeature::VisualCompassFeature()
+VisualCompassFeature::VisualCompassFeature(const VisualCompassParameters & params) : params_(params), isValid_(false)
 {
-    for(unsigned int index = 0; index < COMPASS_FEATURE_NUMBER; index++)
-    {
-        for(unsigned int i = 0; i < NUM_OF_COLORS; i++)
-        {
-            for(unsigned int j = 0; j < NUM_OF_COLORS; j++)
-            {
-                this->featureTable2D[index][i][j] = 123456.78;
-            }
-        }
+    featureTable_.resize(params_.compassFeatureNum);
+    for (unsigned i = 0; i < params_.compassFeatureNum; ++i) {
+        featureTable_[i].resize(params_.colorNum);
+        for (unsigned j = 0; j < params_.colorNum; ++j)
+            featureTable_[i][j].resize(params_.colorNum, 0.0);
     }
 }
 
-VisualCompassFeature::~VisualCompassFeature()
+double VisualCompassFeature::getCertainty(unsigned time) const 
 {
-    //nothing here.
+		// TODO: how does time work?
+    return measurementCertainty_; // * exp(someTimeValueInSecs(difftime(time, current_time))
 }
 
-void VisualCompassFeature::createFeatureFromScanLine(vector< vector<Pixel> > scanLine, ColorDiscretizer ClusteringProvider)
+double VisualCompassFeature::compare(const VisualCompassFeature & other) const
 {
-    if(scanLine.size() == 0) return;
-    for(unsigned int stripe = 0; stripe < scanLine.size(); stripe++)
+    double similarityMeasure = 0.0;
+    for (unsigned index = 0; index < params_.compassFeatureNum; ++index)
+        for (unsigned i = 0; i < params_.colorsNum; ++i)
+            for (unsigned j = 0; j < params_.colorsNum; ++j)
+                similarityMeasure += std::abs((1 - featureTable_[index][i][j]) - (1 - other.featureTable_[index][i][j]));
+    return similarityMeasure;
+}
+
+void VisualCompassFeature::initFromScanlines(const Table2D<Pixel> & scanlines, const ColorDiscretizer & clusterer)
+{
+    if (scanlines.size() == 0) return;
+    
+    for (unsigned stripe = 0; stripe < scanlines.size(); ++stripe)
     {
-        vector<int> labels;
-        ClusteringProvider.discretize(scanLine.at(stripe), labels);
-        for(unsigned int i = 1; i < labels.size(); i++)
-        {
-            this->featureTable2D[stripe][labels.at(i-1)][labels.at(i)] += (double) 1 / (double) labels.size();
-        } 
-    }
-    return;
-}
-
-void VisualCompassFeature::getCertainty(time_t current_time, double &certainty)
-{
-    certainty = this->measurement_certainty * exp(difftime(this->time, current_time));
-}
-
-void VisualCompassFeature::compare(VisualCompassFeature vcf, long double &similarity_measure)
-{
-    similarity_measure = 0.00;
-    for(unsigned int index = 0; index < COMPASS_FEATURE_NUMBER; index++)
-    {
-        for(unsigned int i = 0; i < NUM_OF_COLORS; i++)
-        {
-            for(unsigned int j = 0; j < NUM_OF_COLORS; j++)
-            {
-                similarity_measure += abs((1 - this->featureTable2D[index][i][j]) - (1 - vcf.featureTable2D[index][i][j]));
-            }
-        }
-    }
-    return;
+        auto labels = clusterer.discretize(scanlines[stripe]));
+        unsigned size = labels.size();
+        for (unsigned i = 1; i < size; ++i)
+            featureTable_[stripe][labels[i-1]][labels[i]] += 1.0 / static_cast<double>(size);
+    }    
 }
