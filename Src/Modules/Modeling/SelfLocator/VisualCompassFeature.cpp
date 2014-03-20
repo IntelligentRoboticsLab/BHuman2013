@@ -1,4 +1,5 @@
 #include "VisualCompassFeature.h"
+#include <iostream>
 
 VisualCompassFeature::VisualCompassFeature(const VisualCompassParameters & params) : params_(params), isValid_(false)
 {
@@ -8,12 +9,6 @@ VisualCompassFeature::VisualCompassFeature(const VisualCompassParameters & param
         for (unsigned j = 0; j < params_.colorNum; ++j)
             featureTable_[i][j].resize(params_.colorNum, 0.0);
     }
-}
-
-double VisualCompassFeature::getCertainty(unsigned time) const 
-{
-		// TODO: how does time work?
-    return measurementCertainty_; // * exp(someTimeValueInSecs(difftime(time, current_time))
 }
 
 double VisualCompassFeature::compare(const VisualCompassFeature & other) const
@@ -37,4 +32,60 @@ void VisualCompassFeature::initFromScanlines(const Table2D<Pixel> & scanlines, c
         for (unsigned i = 1; i < size; ++i)
             featureTable_[stripe][labels[i-1]][labels[i]] += 1.0 / static_cast<double>(size);
     }    
+}
+
+void VisualCompassFeature::makeValid( const VisualCompassFeature & other, double newOrientation, double newCertainty ) {
+    featureTable_ = other.featureTable_;
+    agentOrientation_ = newOrientation;
+    measurementCertainty_ = newCertainty;
+
+    // TODO: FIXME: Shouldn't we be updating the time here?
+     
+    isValid_ = true;
+}
+
+const VisualCompassParameters & VisualCompassFeature::getParams() const {
+    return params_;
+}
+
+const VisualCompassFeature::FeatureTableType & VisualCompassFeature::getFeatureTable() const {
+    return featureTable_;
+}
+
+double VisualCompassFeature::getAgentOrientation() const {
+    return agentOrientation_;
+}
+
+double VisualCompassFeature::getCertainty(/* unsigned time */) const 
+{
+	// TODO: how does time work?
+    return measurementCertainty_; // * exp(someTimeValueInSecs(difftime(time, current_time))
+}
+
+bool VisualCompassFeature::isValid() const {
+    return isValid_;
+}
+
+std::ostream & operator<<(std::ostream & os, const VisualCompassFeature & vcf) {
+    for (unsigned index = 0; index < vcf.getParams().compassFeatureNum; ++index)
+        for (unsigned i = 0; i < vcf.getParams().colorsNum; ++i)
+            for (unsigned j = 0; j < vcf.getParams().colorsNum; ++j)
+                os << vcf.getFeatureTable()[index][i][j];
+    os << vcf.getAgentOrientation();
+    os << vcf.getCertainty();
+    os << vcf.isValid();
+
+    return os;
+}
+
+std::istream & operator>>(std::istream & is, VisualCompassFeature & vcf) {
+    for (unsigned index = 0; index < vcf.getParams().compassFeatureNum; ++index)
+        for (unsigned i = 0; i < vcf.getParams().colorsNum; ++i)
+            for (unsigned j = 0; j < vcf.getParams().colorsNum; ++j)
+                is >> vcf.featureTable_[index][i][j];
+    is >> vcf.agentOrientation_;
+    is >> vcf.measurementCertainty_;
+    is >> vcf.isValid_;
+
+    return is;
 }
