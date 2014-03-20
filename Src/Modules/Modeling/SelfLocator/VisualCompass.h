@@ -19,7 +19,7 @@ MODULE(VisualCompass)
 
     PROVIDES(VisualPole)
 
-	  // Parameters for the VisualCompass
+    // Parameters for the VisualCompass
     LOADS_PARAMETER(float, compassWidthMin)
     LOADS_PARAMETER(float, compassWidthMax)
     LOADS_PARAMETER(int, compassFeatureNumber)
@@ -27,8 +27,11 @@ MODULE(VisualCompass)
     LOADS_PARAMETER(bool, compassParticleUpdate)
 
     // Parameters for ColorDiscretizer
-    LOADS_PARAMETER(int, colorsNum)
+    LOADS_PARAMETER(int, colorNum)
 //    LOADS_PARAMETER(std::string, clusterDataFile)
+
+    // Parameters for VisualCompassFeature
+    LOADS_PARAMETER(int, compassFeatureNum)
 
     // Parameters for VisualGridMapProvider
     LOADS_PARAMETER(int, gridXLength)
@@ -40,17 +43,6 @@ MODULE(VisualCompass)
     LOADS_PARAMETER(float, smoothingFactor)
     LOADS_PARAMETER(float, gridCellConfidence)
 END_MODULE
-
-STREAMABLE(VisualCompassFeatureParameters,
-{
-    VisualCompassFeatureParameters() {
-      InMapFile stream("visualCompassFeature.cfg");
-      ASSERT(stream.exists());
-      istream >> *this;
-    },
-    (unsigned) compassFeatureNum,
-    (unsigned) colorNum
-});
 
 class VisualCompass : public VisualCompassBase
 {
