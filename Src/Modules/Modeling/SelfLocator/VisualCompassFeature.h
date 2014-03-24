@@ -1,7 +1,6 @@
 #pragma once
 
 #include <vector>
-#include <chrono>
 #include <iosfwd>
 
 #include "Representation/Infrastructure/Image.h"
@@ -35,11 +34,9 @@ class VisualCompassFeature {
 
     private:
         const VisualCompassParameters & params_;
-        FeatureTabletype featureTable_;
-        //int length_;
+        FeatureTableType featureTable_;
+
         double agentOrientation_;
-        // std::chrono::time_point time_;
-        // Vector2<double> source_position;
         double measurementCertainty_;
         bool isValid_;
 

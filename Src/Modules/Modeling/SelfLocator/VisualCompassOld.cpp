@@ -80,25 +80,25 @@ void VisualCompass::staticColorClusters()
 {
     pixelVector.clear();
 #define DEFAULT_COLOR_CENTROIDS {\
-	{  0,   0,   0},\
-	{255,   0,   0},\
-	{  0, 255,   0},\
-	{255, 255,   0},\
-	{  0,   0, 255},\
-	{255,   0, 255},\
-	{  0, 255, 255},\
-	{255, 255, 255},\
+    {  0,   0,   0},\
+    {255,   0,   0},\
+    {  0, 255,   0},\
+    {255, 255,   0},\
+    {  0,   0, 255},\
+    {255,   0, 255},\
+    {  0, 255, 255},\
+    {255, 255, 255},\
 }
     unsigned char centroids[NUM_OF_COLORS][3] = DEFAULT_COLOR_CENTROIDS;
     for(int i = 0; i < NUM_OF_COLORS; i++)
-		{
-			  Pixel p;
-			  for (int j = 0; j < 3; j++)
-				{
-					p.channels[j] = centroids[i][j];
-				}
-			  pixelVector.push_back(p);
-		}
+        {
+              Pixel p;
+              for (int j = 0; j < 3; j++)
+                {
+                    p.channels[j] = centroids[i][j];
+                }
+              pixelVector.push_back(p);
+        }
     extractPixelsFromImages();
 }
 

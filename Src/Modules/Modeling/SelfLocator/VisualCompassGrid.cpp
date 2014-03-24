@@ -92,7 +92,7 @@ void VisualCompassGrid::saveGridMapModel() {
                 outBinFile << featureGrid_[i][j][k];
 }
 
-void readGridMapModel() {
+void VisualCompassGrid::readGridMapModel() {
     std::ifstream inBinFile(params_.compassDataFile, ios::in | ios::binary);
     for (int i = 0; i < params_.gridX; i++)
         for (int j = 0; j < params_.gridY; j++)
@@ -100,3 +100,51 @@ void readGridMapModel() {
                 inBinFile >> featureGrid_[i][j][k];
 }
 
+std::vector<Vector2<double>> VisualCompassGrid::bestMatches(const Pose2D & robotPose, const VisualCompassFeature & inputFeature) {
+    auto gridPos = fieldPosToGridPos(robotPose.translation.x, robotPose.translation.y);
+    std::vector<Vector2<double>> output;
+
+    if(params_.compassParticleUpdate) {
+        std::vector<Vector2<int>> cells;
+        for (int x = 0; x < params_.gridX; ++x)
+            for (int y = 0; y < params_.gridY; ++y)
+                if(map.gridCellConfidence[x][y] > 0.20)
+                    cells.push_back(Vector2<int>(x, y));
+        if( !cells.empty() ) {
+            for(unsigned a = 0; a < params_.angleBins; ++a) {
+                double similaritySum = 0.00;
+                for(unsigned i = 0; i < cells.size(); ++i) {
+                    auto & cell = cells[i];
+                    auto & feature = featureGrid_[cell.x][cell.y][a];
+                    if ( feature.isValid() ) {
+                        double similarity = feature.compare(inputFeature);
+                        similarity *= 1 - confidenceGrid_[cell.x][cell.y];
+                        similaritySum += similarity;
+                    }
+                }
+                // Old computation.. ??
+                // output.emplace_back(a * (params_.angleBins / 360.0), sum_similarity);
+                output.emplace_back(360.0 * a / params_.angleBins, similaritySum);
+            }
+        }
+        return output;
+    }
+    else {
+        double min_sim = DBL_MAX;
+        double orientation = 0.0;
+        for(unsigned a = 0; a < params_.angleBins; a++) {
+            auto & feature = featureGrid_[cell.x][cell.y][a];
+            if( feature.isValid() ) {
+                double similarity = feature.compare(inputFeature);
+                // multiplied by 1-conf, cause we have min similarity, less means better.
+                similarity *= 1 - confidenceGrid_[cell.x][cell.y];
+                if( similarity < min_sim ) {
+                    min_sim = similarity;
+                    orientation = feature.getOrientation();
+                }
+            }
+        }
+        output.emplace_back(orientation, confidence);
+    }
+    return output;
+}
