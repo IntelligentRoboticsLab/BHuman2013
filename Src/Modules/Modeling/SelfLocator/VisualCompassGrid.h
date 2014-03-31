@@ -5,7 +5,6 @@
 #include "VisualCompassFeature.h"
 #include "Representations/Infrastructure/FieldInfo.h"
 #include "Representations/Modeling/RobotPose.h"
-#include <time.h>
 
 class VisualCompassParameters;
 class FieldDimensions;
