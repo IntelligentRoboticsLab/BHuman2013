@@ -16,6 +16,7 @@ class ColorDiscretizer
         void saveClusters(const std::string & filename);
         void readClusters(const std::string & filename);
 
+        inline bool isClustered() const { return isClustersIndexed_; }
         inline int getClusterNum() const { return clusterNum_; }
         inline cv::Mat getClusterColors() const { return clusterColors_; }
 
