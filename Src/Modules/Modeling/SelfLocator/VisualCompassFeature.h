@@ -19,6 +19,7 @@ class VisualCompassFeature {
         VisualCompassFeature(const VisualCompassParameters & params);
 
         void makeValid(const VisualCompassFeature &, double newOrientation, double newCertainty);
+        void makeInvalid();
 
         void initFromScanlines(const Table2D<Pixel> & scanline, const ColorDiscretizer & clusterer);
         

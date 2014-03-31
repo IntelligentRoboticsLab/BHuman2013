@@ -34,8 +34,11 @@ class VisualCompassGrid {
 
         void updateConfidence(SampleSet<UKFSample>* samples);
         void resetConfidence();
+        void resetFeatures();
 
         void storeFeature(const VisualCompassFeature & vcf, const Pose2D & robotPose);
+
+        std::vector<Vector2<double>> bestMatches(const VisualCompassFeature & inputFeature, const Pose2D & robotPose);
 
         // Debug Only
         // YOU CANNOT CHANGE THE PARAMETERS IN BETWEEN A SAVE

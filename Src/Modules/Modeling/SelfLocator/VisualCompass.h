@@ -31,23 +31,31 @@ MODULE(VisualCompass)
     LOADS_PARAMETERS(VisualCompassParameters, parameters)
 END_MODULE
 
+template <typename T>
+using Table2D = std::vector<std::vector<T>>>;
+
 class VisualCompass : public VisualCompassBase
 {
 private:
     VisualCompassGrid grid_;
     ColorDiscretizer discretizer_;
-    std::vector<Image::Pixel> pixelsForClustering_;
+    std::vector<Image::Pixel> dataPixels_;
     Vector2<int> leftHorizon_, rightHorizon_;
 
     void update(VisualPole&);
-    void clear();
+    void reset();
     void clusterColors();
     bool validHorizon();
+    Table2D<Image::Pixel> verticalScanner();
 
     // Not yet implemented but necessary
-    std::vector<std::vector<Image::Pixel>> verticalScanner();
     void colorExtraction();
     void recordFeatures(); // sort of integrate it into something
     void victoria();
+
+    void updateHorizon();
+    bool inImage(const Vector2<>& imageCoordPoint) const;
+
+    unsigned frameSkip_;
 };
 

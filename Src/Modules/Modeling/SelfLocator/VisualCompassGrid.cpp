@@ -47,6 +47,13 @@ void VisualCompassGrid::resetConfidence() {
         confidenceGrid_[i][j] = 0.0;
 }
 
+void VisualCompassGrid::resetFeatures() {
+    for (int i = 0; i < params_.gridX; i++)
+        for (int j = 0; j < params_.gridY; j++)
+            for (int k = 0; k < params_.angleBins; k++)
+                featureGrid_[i][j][k].makeInvalid();
+}
+
 void VisualCompassGrid::updateConfidence(SampleSet<UKFSample>* samples) {
     int size = samples->size();
     for (int i = 0; i < size; i++) {
@@ -100,7 +107,7 @@ void VisualCompassGrid::readGridMapModel() {
                 inBinFile >> featureGrid_[i][j][k];
 }
 
-std::vector<Vector2<double>> VisualCompassGrid::bestMatches(const Pose2D & robotPose, const VisualCompassFeature & inputFeature) {
+std::vector<Vector2<double>> VisualCompassGrid::bestMatches(const VisualCompassFeature & inputFeature, const Pose2D & robotPose) {
     auto gridPos = fieldPosToGridPos(robotPose.translation.x, robotPose.translation.y);
     std::vector<Vector2<double>> output;
 
@@ -132,7 +139,7 @@ std::vector<Vector2<double>> VisualCompassGrid::bestMatches(const Pose2D & robot
     else {
         double min_sim = DBL_MAX;
         double orientation = 0.0;
-        for(unsigned a = 0; a < params_.angleBins; a++) {
+        for(unsigned a = 0; a < params_.angleBins; ++a) {
             auto & feature = featureGrid_[cell.x][cell.y][a];
             if( feature.isValid() ) {
                 double similarity = feature.compare(inputFeature);

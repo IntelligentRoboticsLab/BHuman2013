@@ -27,7 +27,7 @@ void VisualCompassFeature::initFromScanlines(const Table2D<Pixel> & scanlines, c
     
     for (unsigned stripe = 0; stripe < scanlines.size(); ++stripe)
     {
-        auto labels = clusterer.discretize(scanlines[stripe]));
+        auto labels = clusterer.discretize(scanlines[stripe]);
         unsigned size = labels.size();
         for (unsigned i = 1; i < size; ++i)
             featureTable_[stripe][labels[i-1]][labels[i]] += 1.0 / static_cast<double>(size);
@@ -42,6 +42,10 @@ void VisualCompassFeature::makeValid( const VisualCompassFeature & other, double
     // TODO: FIXME: Shouldn't we be updating the time here?
      
     isValid_ = true;
+}
+
+void VisualCompassFeature::makeInvalid() {
+    isValid_ = false;
 }
 
 const VisualCompassParameters & VisualCompassFeature::getParams() const {
