@@ -3,15 +3,24 @@
 #include "Tools/Module/Module.h"
 
 #include "Representations/Configuration/FieldDimensions.h"
+#include "Representations/Infrastructure/CameraInfo.h"
 #include "Representations/Infrastructure/Image.h"
 #include "Representations/Infrastructure/FrameInfo.h"
 #include "Representations/Modeling/RobotPose.h"
+#include "Representations/Perception/CameraMatrix.h"
 #include "Representations/Perception/ImageCoordinateSystem.h"
 
 #include "Representations/Perception/VisualPole.h"
 
+#include "Tools/ColorDiscretizer.h"
+#include "Tools/Math/Geometry.h"
+
+#include <vector>
+
 MODULE(VisualCompass)
     REQUIRES(Image)
+    REQUIRES(CameraMatrix)
+    REQUIRES(CameraInfo)
     REQUIRES(ImageCoordinateSystem)
     REQUIRES(FieldDimensions)
     REQUIRES(FrameInfo)
@@ -19,34 +28,26 @@ MODULE(VisualCompass)
 
     PROVIDES(VisualPole)
 
-    // Parameters for the VisualCompass
-    LOADS_PARAMETER(float, compassWidthMin)
-    LOADS_PARAMETER(float, compassWidthMax)
-    LOADS_PARAMETER(int, compassFeatureNumber)
-//    LOADS_PARAMETER(std::string, compassDataFile)
-    LOADS_PARAMETER(bool, compassParticleUpdate)
-
-    // Parameters for ColorDiscretizer
-    LOADS_PARAMETER(int, colorNum)
-//    LOADS_PARAMETER(std::string, clusterDataFile)
-
-    // Parameters for VisualCompassFeature
-    LOADS_PARAMETER(int, compassFeatureNum)
-
-    // Parameters for VisualGridMapProvider
-    LOADS_PARAMETER(int, gridXLength)
-    LOADS_PARAMETER(int, gridYLength)
-    LOADS_PARAMETER(int, angleBinsNum)
-    LOADS_PARAMETER(float, angleSize)
-
-    // Parameters for WeightedExperts
-    LOADS_PARAMETER(float, smoothingFactor)
-    LOADS_PARAMETER(float, gridCellConfidence)
+    LOADS_PARAMETERS(VisualCompassParameters, parameters)
 END_MODULE
 
 class VisualCompass : public VisualCompassBase
 {
 private:
+    VisualCompassGrid grid_;
+    ColorDiscretizer discretizer_;
+    std::vector<Image::Pixel> pixelsForClustering_;
+    Vector2<int> leftHorizon_, rightHorizon_;
+
     void update(VisualPole&);
+    void clear();
+    void clusterColors();
+    bool validHorizon();
+
+    // Not yet implemented but necessary
+    std::vector<std::vector<Image::Pixel>> verticalScanner();
+    void colorExtraction();
+    void recordFeatures(); // sort of integrate it into something
+    void victoria();
 };
 
