@@ -57,11 +57,11 @@ void ColorDiscretizer::generateModel(const cv::Mat &samples) {
 }
 
 
-unsigned ColorDiscretizer::getColorClass(float channel1, float channel2, float channel3) {
+unsigned ColorDiscretizer::getColorClass(float channel1, float channel2, float channel3) const {
 #if defined(MODEL_TYPE_KMEANS)
     float minDist = INFINITY, dist;
     unsigned minIndex = clusterNum_;
-    cv::Vec3f *row;
+    const cv::Vec3f *row;
 
     for (unsigned i = 0; i < clusterNum_; ++i) {
         row = clusterColors_.ptr<cv::Vec3f>(i);

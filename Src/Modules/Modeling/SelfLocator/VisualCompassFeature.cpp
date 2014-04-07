@@ -1,27 +1,27 @@
 #include "VisualCompassFeature.h"
 #include <iostream>
 
-VisualCompassFeature::VisualCompassFeature(const VisualCompassParameters & params) : params_(params), isValid_(false)
+VisualCompassFeature::VisualCompassFeature(const VisualCompassParameters & params) : params_(&params), isValid_(false)
 {
-    featureTable_.resize(params_.compassFeatureNum);
-    for (unsigned i = 0; i < params_.compassFeatureNum; ++i) {
-        featureTable_[i].resize(params_.colorNum);
-        for (unsigned j = 0; j < params_.colorNum; ++j)
-            featureTable_[i][j].resize(params_.colorNum, 0.0);
+    featureTable_.resize(params_->compassFeatureNum);
+    for (unsigned i = 0; i < params_->compassFeatureNum; ++i) {
+        featureTable_[i].resize(params_->colorsNum);
+        for (unsigned j = 0; j < params_->colorsNum; ++j)
+            featureTable_[i][j].resize(params_->colorsNum, 0.0);
     }
 }
 
 double VisualCompassFeature::compare(const VisualCompassFeature & other) const
 {
     double similarityMeasure = 0.0;
-    for (unsigned index = 0; index < params_.compassFeatureNum; ++index)
-        for (unsigned i = 0; i < params_.colorsNum; ++i)
-            for (unsigned j = 0; j < params_.colorsNum; ++j)
+    for (unsigned index = 0; index < params_->compassFeatureNum; ++index)
+        for (unsigned i = 0; i < params_->colorsNum; ++i)
+            for (unsigned j = 0; j < params_->colorsNum; ++j)
                 similarityMeasure += std::abs((1 - featureTable_[index][i][j]) - (1 - other.featureTable_[index][i][j]));
     return similarityMeasure;
 }
 
-void VisualCompassFeature::initFromScanlines(const Table2D<Pixel> & scanlines, const ColorDiscretizer & clusterer)
+void VisualCompassFeature::initFromScanlines(const Table2D<Image::Pixel> & scanlines, const ColorDiscretizer & clusterer)
 {
     if (scanlines.size() == 0) return;
     
@@ -49,7 +49,7 @@ void VisualCompassFeature::makeInvalid() {
 }
 
 const VisualCompassParameters & VisualCompassFeature::getParams() const {
-    return params_;
+    return *params_;
 }
 
 const VisualCompassFeature::FeatureTableType & VisualCompassFeature::getFeatureTable() const {

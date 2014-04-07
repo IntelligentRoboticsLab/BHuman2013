@@ -5,7 +5,7 @@
 
 MAKE_MODULE(VisualCompass, Perception)
 
-VisualCompass::VisualCompass() : grid_(parameters, theFieldDimensions), discretizer_(parameters.colorNum), frameSkip_(0) {
+VisualCompass::VisualCompass() : VisualCompassBase(), grid_(parameters, theFieldDimensions), discretizer_(parameters.colorsNum), frameSkip_(0) {
 }
 
 void VisualCompass::update(VisualPole&) {
@@ -24,7 +24,7 @@ void VisualCompass::update(VisualPole&) {
 void VisualCompass::victoria() {
     if ( !validHorizon() || !discretizer_.isClustered() ) return;
 
-    VisualCompassFeature feature;
+    VisualCompassFeature feature(parameters);
     feature.initFromScanlines(verticalScanner(), discretizer_);
 
     auto bestMatches = grid_.bestMatches(feature, theRobotPose);
@@ -72,12 +72,14 @@ void VisualCompass::clusterColors() {
 
 Table2D<Image::Pixel> VisualCompass::verticalScanner() {
     std::vector<std::vector<Image::Pixel>> result;
-    result.reserve(N-1);
+    result.reserve(parameters.compassFeatureNum-1);
 
     double N = parameters.compassFeatureNum;
+
     // N-.5 is because we want to avoid double approximation errors.
     for ( double x = 0.0; x < (N-.5); ++x ) {
-        auto horizonPoint = ((x + .5)/N)*leftHorizon_ + ((N-x-.5)/N)*rightHorizon_;
+        auto horizonPoint = leftHorizon_ * static_cast<int>((x + .5)/N) + 
+                            rightHorizon_ * static_cast<int>((N-x-.5)/N);
         auto horizonCoordinatedPoint = theImageCoordinateSystem.toHorizonBased(horizonPoint);
 
         std::vector<Image::Pixel> line;
@@ -94,7 +96,7 @@ Table2D<Image::Pixel> VisualCompass::verticalScanner() {
 
 bool VisualCompass::validHorizon() {
     static const double maxArea = theImage.width * theImage.height;
-    double currentArea = theImage.wdith * (leftHorizon_.y + rightHorizon_.y) / 2.0;
+    double currentArea = theImage.width * (leftHorizon_.y + rightHorizon_.y) / 2.0;
     double areaCovered = currentArea / maxArea;
 
     return (areaCovered >= parameters.compassAreaMinRatio &&
@@ -105,15 +107,15 @@ bool VisualCompass::validHorizon() {
 void VisualCompass::updateClusterPixels() {
     if ( frameSkip_ || discretizer_.isClustered() ) return;
 
-    for ( unsigned x = 0; x < theImage.width; ++x )
-        for ( unsigned y = 0; y < theImage.height; ++y )
+    for ( int x = 0; x < theImage.width; ++x )
+        for ( int y = 0; y < theImage.height; ++y )
             dataPixels_.push_back(theImage[y][x]);
 }
 
 void VisualCompass::recordFeatures() {
     if ( !validHorizon() || !discretizer_.isClustered() ) return;
 
-    VisualCompassFeature feature;
+    VisualCompassFeature feature(parameters);
     feature.initFromScanlines(verticalScanner(), discretizer_);
 
     grid_.storeFeature(feature, theRobotPose);

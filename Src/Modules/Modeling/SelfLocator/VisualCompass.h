@@ -15,6 +15,10 @@
 #include "Tools/ColorDiscretizer.h"
 #include "Tools/Math/Geometry.h"
 
+#include "VisualCompassParameters.h"
+#include "VisualCompassGrid.h"
+#include "VisualCompassTypes.h"
+
 #include <vector>
 
 MODULE(VisualCompass)
@@ -28,20 +32,20 @@ MODULE(VisualCompass)
 
     PROVIDES(VisualPole)
 
-    LOADS_PARAMETERS(VisualCompassParameters, parameters)
+    LOADS_PARAMETER(VisualCompassParameters, parameters)
 END_MODULE
-
-template <typename T>
-using Table2D = std::vector<std::vector<T>>>;
 
 class VisualCompass : public VisualCompassBase
 {
+public:
+    VisualCompass();
 private:
     VisualCompassGrid grid_;
     ColorDiscretizer discretizer_;
     std::vector<Image::Pixel> dataPixels_;
     Vector2<int> leftHorizon_, rightHorizon_;
 
+    void updateClusterPixels();
     void update(VisualPole&);
     void reset();
     void clusterColors();

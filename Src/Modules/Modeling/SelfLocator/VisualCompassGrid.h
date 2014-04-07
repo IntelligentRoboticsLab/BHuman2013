@@ -1,26 +1,20 @@
 #pragma once
 
 #include <vector>
-//#include "VisualCompassParameters.h"
+#include "VisualCompassParameters.h"
 #include "VisualCompassFeature.h"
-#include "Representations/Infrastructure/FieldInfo.h"
+#include "Representations/Configuration/FieldDimensions.h"
 #include "Representations/Modeling/RobotPose.h"
+#include "VisualCompassTypes.h"
+
+#include "Tools/Math/Vector.h"
 
 class VisualCompassParameters;
 class FieldDimensions;
 class UKFSample;
-class Vector3f;
 class RobotPose;
 
-template <typename T> class Vector2;
-template <typename T> class Vector3;
 template <typename T> class SampleSet;
-
-template <typename T>
-using Table3D = std::vector<std::vector<std::vector<T>>>;
-
-template <typename T>
-using Table2D = std::vector<std::vector<T>>;
 
 class VisualCompassGrid {
     public:
@@ -30,7 +24,7 @@ class VisualCompassGrid {
         VisualCompassGrid(const VisualCompassParameters & params, const FieldDimensions & info);
 
         Vector2<int> fieldPosToGridPos(float x, float y) const;
-        int fieldPosToGridPos(float angle) const;
+        int fieldAngleToGridAngle(float angle) const;
 
         void updateConfidence(SampleSet<UKFSample>* samples);
         void resetConfidence();

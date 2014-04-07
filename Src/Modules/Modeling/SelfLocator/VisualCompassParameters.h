@@ -6,24 +6,27 @@ STREAMABLE(VisualCompassParameters,
 {,
     (float) compassWidthMin,
     (float) compassWidthMax,
-    (int) compassFeatureNumber,
+    (unsigned) compassFeatureNumber,
 //    (std::string) compassDataFile,
     (bool) compassParticleUpdate,
+    (unsigned) frameSkipNum,
 
     // Parameters for ColorDiscretizer
-    (int) colorNum,
+    (unsigned) colorsNum,
 //    (std::string) clusterDataFile,
 
     // Parameters for VisualCompassFeature
-    (int) compassFeatureNum,
+    (unsigned) compassFeatureNum,
 
     // Parameters for VisualGridMapProvider
-    (int) gridXLength,
-    (int) gridYLength,
-    (int) angleBinsNum,
+    (unsigned) gridXLength,
+    (unsigned) gridYLength,
+    (unsigned) angleBinsNum,
     (float) angleSize,
 
     // Parameters for WeightedExperts
     (float) smoothingFactor,
     (float) gridCellConfidence,
+    (float) compassAreaMinRatio,
+    (float) compassAreaMaxRatio,
 });

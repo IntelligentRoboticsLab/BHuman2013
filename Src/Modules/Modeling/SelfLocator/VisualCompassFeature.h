@@ -1,16 +1,11 @@
 #pragma once
 
-#include <vector>
 #include <iosfwd>
 
-#include "Representation/Infrastructure/Image.h"
-//include for ColorDiscretizer
-
-template <typename T>
-using Table3D = std::vector<std::vector<std::vector<T>>>;
-
-template <typename T>
-using Table2D = std::vector<std::vector<T>>>;
+#include "VisualCompassTypes.h"
+#include "Representations/Infrastructure/Image.h"
+#include "VisualCompassParameters.h"
+#include "Tools/ColorDiscretizer.h"
 
 class VisualCompassFeature {
     public:
@@ -21,12 +16,12 @@ class VisualCompassFeature {
         void makeValid(const VisualCompassFeature &, double newOrientation, double newCertainty);
         void makeInvalid();
 
-        void initFromScanlines(const Table2D<Pixel> & scanline, const ColorDiscretizer & clusterer);
+        void initFromScanlines(const Table2D<Image::Pixel> & scanline, const ColorDiscretizer & clusterer);
         
         double compare(const VisualCompassFeature &) const;
 
         const VisualCompassParameters & getParams() const;
-        const FeatureTabletype & getFeatureTable() const;
+        const FeatureTableType & getFeatureTable() const;
         double getAgentOrientation() const;
         double getCertainty(/* possibly unsigned timestamp */) const; // See how to pass, using frameinfo style
 
@@ -34,7 +29,7 @@ class VisualCompassFeature {
         bool isValid() const;
 
     private:
-        const VisualCompassParameters & params_;
+        const VisualCompassParameters * params_;
         FeatureTableType featureTable_;
 
         double agentOrientation_;

@@ -45,6 +45,7 @@ Nao = cppApplication + {
     "$(utilDirRoot)/Buildchain/gcc/include/c++/4.7.1/i486-linux-gnu",
     "$(utilDirRoot)/Buildchain/clang4.2/include",
     "$(utilDirRoot)/snappy/include",
+    "/usr/local/include",
   },
   libPaths = {
     "$(utilDirRoot)/libjpeg/lib",
