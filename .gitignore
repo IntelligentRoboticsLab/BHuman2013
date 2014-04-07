@@ -1,0 +1,11 @@
+Build
+
+Config/Robots
+Config/specialActions.dat
+
+Make/LinuxCodeLite/*.workspace
+Make/LinuxCodeLite/*.project
+Make/LinuxNetBeans/B-Human/
+
+Util/alcommon
+Util/boost
