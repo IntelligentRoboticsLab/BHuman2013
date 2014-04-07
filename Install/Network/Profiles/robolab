@@ -3,10 +3,10 @@ ctrl_interface_group=0
 ap_scan=1
 
 network={
-  ssid="Dutch Nao Team Wifi"
+  ssid="Dutch Nao Team Robolab"
   scan_ssid=1
   proto=WPA2
   key_mgmt=WPA-PSK
-  psk="sam+moos"
+  psk="DnT10RuleS"
 }
 
