@@ -14,13 +14,8 @@ class ColorDiscretizer
         ColorDiscretizer(unsigned clusterNum);
         void setClusters(unsigned clusterNum);
         bool initializeColorModel(const std::vector<Image::Pixel> & pixels);
-<<<<<<< HEAD
-        std::vector<int> discretize(const std::vector<Image::Pixel> & pixels);
-        unsigned getColorClass(float channel1, float channel2, float channel3); // Model-specific
-=======
         std::vector<int> discretize(const std::vector<Image::Pixel> & pixels) const;
-        unsigned getColorClass(float channel1, float channel2, float channel3) const;
->>>>>>> VisualCompass nearly compiles.
+        unsigned getColorClass(float channel1, float channel2, float channel3) const; // Model-specific
 
         void saveClusters(const std::string & filename); // Model-specific
         void readClusters(const std::string & filename); // Model-specific
