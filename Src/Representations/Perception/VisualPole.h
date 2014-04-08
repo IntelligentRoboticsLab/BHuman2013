@@ -1,9 +1,6 @@
 #pragma once
 
 #include "Tools/Streams/AutoStreamable.h"
+#include "Representations/Modeling/RobotPose.h"
 
-STREAMABLE(VisualPole,
-{,
-  (float)(42.f) direction,
-});
-
+STREAMABLE_WITH_BASE(VisualPole,RobotPose,{});

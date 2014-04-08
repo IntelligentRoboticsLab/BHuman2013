@@ -78,7 +78,7 @@ Table2D<Image::Pixel> VisualCompass::verticalScanner() {
 
     // N-.5 is because we want to avoid double approximation errors.
     for ( double x = 0.0; x < (N-.5); ++x ) {
-        auto horizonPoint = leftHorizon_ * static_cast<int>((x + .5)/N) + 
+        auto horizonPoint = leftHorizon_ * static_cast<int>((x + .5)/N) +
                             rightHorizon_ * static_cast<int>((N-x-.5)/N);
         auto horizonCoordinatedPoint = theImageCoordinateSystem.toHorizonBased(horizonPoint);
 
@@ -102,7 +102,6 @@ bool VisualCompass::validHorizon() {
     return (areaCovered >= parameters.compassAreaMinRatio &&
             areaCovered <= parameters.compassAreaMaxRatio);
 }
-
 
 void VisualCompass::updateClusterPixels() {
     if ( frameSkip_ || discretizer_.isClustered() ) return;
@@ -128,7 +127,7 @@ void VisualCompass::updateHorizon() {
     Geometry::getIntersectionPointsOfLineAndRectangle(bottomLeft, topRight, horizon, leftHorizon_, rightHorizon_);
 }
 
-bool VisualCompass::inImage(const Vector2<>& imageCoordPoint) const {
-    return  imageCoordPoint.x >= 0.0 && imageCoordPoint.x <= theImage.width &&
-            imageCoordPoint.y >= 0.0 && imageCoordPoint.y <= theImage.height;
+bool VisualCompass::inImage(const Vector2<int>& imageCoordPoint) const {
+    return  imageCoordPoint.x >= 0 && imageCoordPoint.x <= theImage.width &&
+            imageCoordPoint.y >= 0 && imageCoordPoint.y <= theImage.height;
 }

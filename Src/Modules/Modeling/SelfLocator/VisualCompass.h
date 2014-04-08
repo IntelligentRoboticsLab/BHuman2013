@@ -58,7 +58,7 @@ private:
     void victoria();
 
     void updateHorizon();
-    bool inImage(const Vector2<>& imageCoordPoint) const;
+    bool inImage(const Vector2<int>& imageCoordPoint) const;
 
     unsigned frameSkip_;
 };
