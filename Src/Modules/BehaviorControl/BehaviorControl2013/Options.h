@@ -25,6 +25,7 @@
 #include "Options/Output/PlaySound.h"
 
 #include "Options/Roles/Striker.h"
+#include "Options/Roles/Goalie.h"
 
 #include "Options/Skills/GetUp.h"
 
