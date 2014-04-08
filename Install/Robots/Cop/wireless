@@ -4,7 +4,7 @@
 # $Header: $
 
 BASE_WLAN0_IP="10.0.6."
-ROBOT_ID="1"
+ROBOT_ID="6"
 #GATEWAY="10.0.0.1"
 
 depend() {

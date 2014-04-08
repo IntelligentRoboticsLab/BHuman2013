@@ -3,7 +3,7 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-BASE_WLAN0_IP="10.0.8."
+BASE_WLAN0_IP="10.0.6."
 ROBOT_ID="4"
 #GATEWAY="10.0.0.1"
 
