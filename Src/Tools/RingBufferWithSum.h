@@ -9,6 +9,7 @@
 
 #pragma once
 
+#include "Tools/Streams/Streamable.h"
 
 /**
  * @class RingBufferWithSum
@@ -16,11 +17,21 @@
  * Template class for cyclic buffering of the last n values of the type C
  * and with a function that returns the sum of all entries.
  */
-template <class C, int n> class RingBufferWithSum
+template <class C, int n> class RingBufferWithSum : public Streamable
 {
 public:
   /** Constructor */
   RingBufferWithSum() {init();}
+
+  inline void serialize(In* in , Out* out) {
+      STREAM_REGISTER_BEGIN;
+        STREAM(current);
+        STREAM(numberOfEntries);
+        for( int i = 0; i < n; ++i )
+            STREAM(buffer[i]);
+        STREAM(sum);
+      STREAM_REGISTER_FINISH;
+  }
 
   /**
    * initializes the RingBufferWithSum

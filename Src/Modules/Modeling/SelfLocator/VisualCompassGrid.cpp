@@ -60,10 +60,10 @@ void VisualCompassGrid::resetFeatures() {
                 featureGrid_[i][j][k].makeInvalid();
 }
 
-void VisualCompassGrid::updateConfidence(SampleSet<UKFSample>* samples) {
-    int size = samples->size();
+void VisualCompassGrid::updateConfidence(const SampleSet<UKFSample>& samples) {
+    int size = samples.size();
     for (int i = 0; i < size; i++) {
-        UKFSample & sample = samples->at(i);
+        const UKFSample & sample = samples.at(i);
         auto gridPos = fieldPosToGridPos(sample.mean.x, sample.mean.y);
         confidenceGrid_[gridPos.x][gridPos.y] += 1.0 / static_cast<double>(size);
     }

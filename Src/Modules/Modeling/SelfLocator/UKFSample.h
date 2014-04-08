@@ -14,6 +14,8 @@
 #include "Tools/Math/Pose2D.h"
 #include "Tools/RingBufferWithSum.h"
 
+#include "Tools/Streams/Streamable.h"
+
 class CameraMatrix;
 class FieldModel;
 class FieldDimensions;
@@ -27,7 +29,7 @@ class MotionInfo;
 *
 * Hypothesis of a robot's pose, modeled as an Unscented Kalman Filter
 */
-class UKFSample
+class UKFSample : public Streamable
 {
 public:
   Vector3f   mean;          /**< The estimated pose. */
@@ -38,6 +40,8 @@ private:
   Vector3f sigmaPoints[7];  /**< Sigma points for updating the filter */
   Matrix3x3f l;             /**< Last computed cholesky decomposition */
   RingBufferWithSum<float,60> validityBuffer;
+
+  void serialize(In*, Out*);
 
 public:
 

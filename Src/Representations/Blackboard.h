@@ -72,6 +72,7 @@ class GroundTruthBallModel;
 class ObstacleModel;
 class USObstacleModel;
 class RobotPose;
+class UKFSamples;
 class FilteredRobotPose;
 class FootContactModel;
 class GroundTruthRobotPose;
@@ -205,6 +206,7 @@ protected:
   const ObstacleModel& theObstacleModel;
   const USObstacleModel& theUSObstacleModel;
   const RobotPose& theRobotPose;
+  const UKFSamples& theUKFSamples;
   const FilteredRobotPose& theFilteredRobotPose;
   const FootContactModel& theFootContactModel;
   const GroundTruthRobotPose& theGroundTruthRobotPose;

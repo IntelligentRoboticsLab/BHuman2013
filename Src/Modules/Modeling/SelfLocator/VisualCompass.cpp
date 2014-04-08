@@ -14,7 +14,7 @@ void VisualCompass::update(VisualPole&) {
     OUTPUT(idText, text, "ViCTOriA here!");
 
     grid_.resetConfidence();
-    grid_.updateConfidence(theSampleSet);
+    grid_.updateConfidence(theUKFSamples.samples);
 
     // Here be many DEBUG_REQUESTs
     //

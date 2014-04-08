@@ -24,6 +24,7 @@
 #include "Representations/Modeling/Odometer.h"
 #include "Representations/Modeling/OwnSideModel.h"
 #include "Representations/Modeling/SideConfidence.h"
+#include "Representations/Modeling/UKFSamples.h"
 #include "Representations/MotionControl/MotionInfo.h"
 #include "Representations/Perception/BallPercept.h"
 #include "Representations/Perception/CameraMatrix.h"
@@ -51,9 +52,11 @@ MODULE(SelfLocator)
   REQUIRES(FieldBoundary)
   REQUIRES(RobotPose)
   REQUIRES(SideConfidence)                      //  <--- For GO 2013
+  REQUIRES(UKFSamples)
   USES(CombinedWorldModel)
   USES(BehaviorControlOutput)
   PROVIDES_WITH_OUTPUT(RobotPose)
+  PROVIDES(UKFSamples)
   // PROVIDES_WITH_MODIFY_AND_DRAW(SideConfidence)  <--- Deactivated for GO 2013
 END_MODULE
 
@@ -66,7 +69,7 @@ END_MODULE
 class SelfLocator : public SelfLocatorBase
 {
 private:
-  SampleSet<UKFSample>* samples;       /**< Container for all samples. */
+  SampleSet<UKFSample> * samples;
   SelfLocatorParameters parameters; /**< Several parameters */
   FieldModel fieldModel;            /**< Information about the robot's environment */
   TemplateGenerator sampleGenerator;  /**< Several parameters */
@@ -85,6 +88,7 @@ private:
   * @param robotPose The robot pose representation that is updated by this module.
   */
   void update(RobotPose& robotPose);
+  void update(UKFSamples& samples);
 
    /**
   * The method provides the SideConfidence based on the uniformity of the distibution
@@ -130,7 +134,4 @@ private:
 public:
   /** Default constructor. */
   SelfLocator();
-
-  /** Destructor. */
-  ~SelfLocator();
 };

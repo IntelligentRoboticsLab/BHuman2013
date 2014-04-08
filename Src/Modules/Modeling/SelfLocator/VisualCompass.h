@@ -7,6 +7,7 @@
 #include "Representations/Infrastructure/Image.h"
 #include "Representations/Infrastructure/FrameInfo.h"
 #include "Representations/Modeling/RobotPose.h"
+#include "Representations/Modeling/UKFSamples.h"
 #include "Representations/Perception/CameraMatrix.h"
 #include "Representations/Perception/ImageCoordinateSystem.h"
 
@@ -29,6 +30,7 @@ MODULE(VisualCompass)
     REQUIRES(FieldDimensions)
     REQUIRES(FrameInfo)
     REQUIRES(RobotPose)
+    REQUIRES(UKFSamples)
 
     PROVIDES(VisualPole)
 

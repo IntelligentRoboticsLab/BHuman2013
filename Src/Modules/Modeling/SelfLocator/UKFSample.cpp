@@ -37,6 +37,20 @@ void UKFSample::init(const Pose2D& pose, const SelfLocatorParameters& parameters
     validityBuffer.add(0.5f);
 }
 
+void UKFSample::serialize(In* in, Out* out) {
+  STREAM_REGISTER_BEGIN;
+  STREAM(mean);
+  STREAM(cov); 
+  STREAM(mirrored); 
+  for ( int i = 0; i < 7; ++i ) 
+    STREAM(sigmaPoints[i]); 
+  STREAM(l); 
+  STREAM(validityBuffer); 
+  STREAM(weighting); 
+  STREAM(validity); 
+  STREAM_REGISTER_FINISH;
+}
+
 
 void UKFSample::motionUpdate(const Pose2D& odometryOffset, const SelfLocatorParameters& parameters)
 {

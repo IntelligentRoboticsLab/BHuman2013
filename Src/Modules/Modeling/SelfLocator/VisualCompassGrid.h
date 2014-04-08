@@ -26,7 +26,7 @@ class VisualCompassGrid {
         Vector2<int> fieldPosToGridPos(float x, float y) const;
         int fieldAngleToGridAngle(float angle) const;
 
-        void updateConfidence(SampleSet<UKFSample>* samples);
+        void updateConfidence(const SampleSet<UKFSample>& samples);
         void resetConfidence();
         void resetFeatures();
 

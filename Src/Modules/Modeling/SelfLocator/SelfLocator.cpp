@@ -14,7 +14,7 @@
 using namespace std;
 
 
-SelfLocator::SelfLocator() : fieldModel(theFieldDimensions, parameters, theCameraMatrix),
+SelfLocator::SelfLocator() : samples(nullptr), fieldModel(theFieldDimensions, parameters, theCameraMatrix),
   sampleGenerator(parameters, theGoalPercept, theLinePercept, theFrameInfo,
   theFieldDimensions, theOdometryData), mirrorLikelihood(0.f), lastPenalty(-1), lastGameState(-1),
   timeOfLastFall(0), lastTimeWithoutArmContact(0), lastTimeFarGoalSeen(0)
@@ -27,21 +27,21 @@ SelfLocator::SelfLocator() : fieldModel(theFieldDimensions, parameters, theCamer
   // Set up subcomponent for sample resetting
   sampleGenerator.init();
 
+}
+
+void SelfLocator::update(UKFSamples& globalsamples) {
+  if ( samples ) return;
+
   // Create sample set with samples at the typical walk-in positions
-  samples = new SampleSet<UKFSample>(parameters.numberOfSamples);
-  for(int i=0; i<samples->size(); ++i)
+  globalsamples.samples = SampleSet<UKFSample>(parameters.numberOfSamples);
+  for(int i=0; i<globalsamples.samples.size(); ++i)
   {
     Pose2D pose = sampleGenerator.getTemplateAtWalkInPosition();
-    samples->at(i).init(pose, parameters);
+    globalsamples.samples.at(i).init(pose, parameters);
   }
+
+  samples = &(globalsamples.samples);
 }
-
-
-SelfLocator::~SelfLocator()
-{
-  delete samples;
-}
-
 
 void SelfLocator::update(RobotPose& robotPose)
 {

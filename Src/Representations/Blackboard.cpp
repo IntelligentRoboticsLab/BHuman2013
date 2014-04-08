@@ -71,6 +71,7 @@ Blackboard::Blackboard() :
   theObstacleModel(theObstacleModel),
   theUSObstacleModel(theUSObstacleModel),
   theRobotPose(theRobotPose),
+  theUKFSamples(theUKFSamples),
   theFilteredRobotPose(theFilteredRobotPose),
   theFootContactModel(theFootContactModel),
   theGroundTruthRobotPose(theGroundTruthRobotPose),
