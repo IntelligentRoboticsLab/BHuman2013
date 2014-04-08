@@ -7,6 +7,6 @@ network={
   scan_ssid=1
   proto=WPA2
   key_mgmt=WPA-PSK
-  psk="sam+moos"
+  psk="IranOpen2014!"
 }
 
