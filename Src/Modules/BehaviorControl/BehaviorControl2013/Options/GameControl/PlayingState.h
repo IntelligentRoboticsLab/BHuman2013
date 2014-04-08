@@ -9,7 +9,13 @@ option(PlayingState)
     }
     action
     {
-      Striker();
+	if(theRobotInfo.number == 1){
+		Goalie();
+	}else{
+		Striker();
+	}
     }
   }
 }
+
+
