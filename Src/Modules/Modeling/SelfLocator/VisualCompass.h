@@ -24,9 +24,9 @@
 
 MODULE(VisualCompass)
     REQUIRES(Image)
-    REQUIRES(CameraMatrix)
+    USES(CameraMatrix)
     REQUIRES(CameraInfo)
-    REQUIRES(ImageCoordinateSystem)
+    USES(ImageCoordinateSystem)
     REQUIRES(FieldDimensions)
     REQUIRES(FrameInfo)
     REQUIRES(RobotPose)
