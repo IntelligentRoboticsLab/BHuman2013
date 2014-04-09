@@ -15,6 +15,9 @@ namespace Behavior2013
   void LibCodeRelease::preProcess()
   {
     angleToGoal = (theRobotPose.invert() * Vector2<> (theFieldDimensions.xPosOpponentGroundline, 0.f)).angle();
+    // for robot position absolute	  
+    //selfX = theRobotPose.translation.x;
+    //selfY = theRobotPose.translation.y;
   }
 
   void LibCodeRelease::postProcess()
@@ -30,4 +33,5 @@ namespace Behavior2013
   {
     return value >= min && value <= max;
   }  
+  
 }

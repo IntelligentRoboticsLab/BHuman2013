@@ -1,71 +1,52 @@
-/** The ultimate Keeper without common decision */
+/** Amogh's Goalie */
 option(Goalie)
 {
   initial_state(start)
   {
     transition
     {
-      if(state_time > 1000)
-        goto turnToBall;
+      if((theRobotPose.translation.x > -3900.f || theRobotPose.translation.x < -4500.f || theRobotPose.translation.y < -1100.f || theRobotPose.translation.y > 1100.f))
+        goto walktogoal;
+	  //If ball in goal area
+	  else if(theBallModel.estimate.position.x+theRobotPose.translation.x < -3100.f && theBallModel.estimate.position.y-theRobotPose.translation.y < 1100.f && theBallModel.estimate.position.y-theRobotPose.translation.y > - 1100.f)
+		goto walktoballandkick;
     }
     action
     {
-      theHeadControlMode = HeadControl::lookForward;
-      InWalkKick(WalkRequest::left, Pose2D(libCodeRelease.angleToGoal, theBallModel.estimate.position.x - 160.f, theBallModel.estimate.position.y - 55.f));
-
+      theHeadControlMode = HeadControl::scan;
+      Stand();
     }
   }
-
-  state(turnToBall)
+  state(walktogoal)
   {
-    transition
-    {
-      if(libCodeRelease.timeSinceBallWasSeen() > 7000)
-        goto searchForBall;
-      if(std::abs(theBallModel.estimate.position.angle()) < fromDegrees(5.f))
-        goto walkToBall;
-    }
-    action
-    {
-      theHeadControlMode = HeadControl::lookForward;
-      InWalkKick(WalkRequest::left, Pose2D(libCodeRelease.angleToGoal, theBallModel.estimate.position.x - 160.f, theBallModel.estimate.position.y - 55.f));
-	
-    }
+	transition
+	{
+		//If ball in goal area
+		if(theBallModel.estimate.position.x+theRobotPose.translation.x < -3100.f && theBallModel.estimate.position.y-theRobotPose.translation.y < 1100.f && theBallModel.estimate.position.y-theRobotPose.translation.y > - 1100.f)
+			goto walktoballandkick;
+	}
+	action
+	{
+		theHeadControlMode = HeadControl::scan;
+		InWalkKick(WalkRequest::left, Pose2D(libCodeRelease.angleToGoal, (theFieldDimensions.xPosOwnGroundline - theRobotPose.translation.x),  -theRobotPose.translation.y));
+	}
   }
-
-  state(walkToBall)
+  
+  state(walktoballandkick)
   {
-    transition
-    {
-      if(libCodeRelease.timeSinceBallWasSeen() > 7000)
-        goto searchForBall;
-      if(theBallModel.estimate.position.abs() < 50.f)
-        goto alignToGoal;
-
-    }
-    action
-    {
-      theHeadControlMode = HeadControl::lookForward;
-      InWalkKick(WalkRequest::left, Pose2D(libCodeRelease.angleToGoal, theBallModel.estimate.position.x - 160.f, theBallModel.estimate.position.y - 55.f));
-	
-    }
-  }
-
-  state(alignToGoal)
-  {
-    transition
-    {
-      if(libCodeRelease.timeSinceBallWasSeen() > 7000)
-        goto searchForBall;
-      if(std::abs(libCodeRelease.angleToGoal) < fromDegrees(10.f) && std::abs(theBallModel.estimate.position.y) < 100.f)
+	transition
+	{
+		//If ball outside goal area
+		if(!(theBallModel.estimate.position.x+theRobotPose.translation.x < -3100.f && theBallModel.estimate.position.y-theRobotPose.translation.y < 1100.f && theBallModel.estimate.position.y-theRobotPose.translation.y > - 1100.f))
+			goto walktogoal;
+      if(action_done&&std::abs(libCodeRelease.angleToGoal) < fromDegrees(10.f) && std::abs(theBallModel.estimate.position.y) < 100.f)
         goto alignBehindBall;
-    }
-    action
-    {
-      theHeadControlMode = HeadControl::lookForward;
-      InWalkKick(WalkRequest::left, Pose2D(libCodeRelease.angleToGoal, theBallModel.estimate.position.x - 160.f, theBallModel.estimate.position.y - 55.f));
-	
-    }
+	}
+	action
+	{
+		theHeadControlMode = HeadControl::lookForward;
+		InWalkKick(WalkRequest::left, Pose2D(libCodeRelease.angleToGoal, theBallModel.estimate.position.x - 160.f, theBallModel.estimate.position.y - 55.f));
+	}
   }
 
   state(alignBehindBall)
@@ -73,7 +54,7 @@ option(Goalie)
     transition
     {
       if(libCodeRelease.timeSinceBallWasSeen() > 7000)
-        goto searchForBall;
+        goto walktogoal;
       if(libCodeRelease.between(theBallModel.estimate.position.y, 20.f, 50.f)
         && libCodeRelease.between(theBallModel.estimate.position.x, 140.f, 170.f)
         && std::abs(libCodeRelease.angleToGoal) < fromDegrees(2.f))
@@ -82,8 +63,7 @@ option(Goalie)
     action
     {
       theHeadControlMode = HeadControl::lookForward;
-      InWalkKick(WalkRequest::left, Pose2D(libCodeRelease.angleToGoal, theBallModel.estimate.position.x - 160.f, theBallModel.estimate.position.y - 55.f));
-	
+      WalkToTarget(Pose2D(80.f, 80.f, 80.f), Pose2D(libCodeRelease.angleToGoal, theBallModel.estimate.position.x - 150.f, theBallModel.estimate.position.y - 30.f));
     }
   }
 
@@ -98,40 +78,6 @@ option(Goalie)
     {
       theHeadControlMode = HeadControl::lookForward;
       InWalkKick(WalkRequest::left, Pose2D(libCodeRelease.angleToGoal, theBallModel.estimate.position.x - 160.f, theBallModel.estimate.position.y - 55.f));
-	
     }
   }
-  
-  state(searchForBall)
-  {
-    transition
-    {
-      if(theRobotPose.translation.x < -3900 || theRobotPose.translation.x > -4500 || theRobotPose.translation.y < -1100 || theRobotPose.translation.y > 1100)
-      goto goToGoaliePosition;
-      if(libCodeRelease.timeSinceBallWasSeen() < 300)
-      goto turnToBall;
-    }
-    action
-    {
-      theHeadControlMode = HeadControl::lookForward;
-      InWalkKick(WalkRequest::left, Pose2D(libCodeRelease.angleToGoal, theBallModel.estimate.position.x - 160.f, theBallModel.estimate.position.y - 55.f));
-	
-    }
-  }
-  state(goToGoaliePosition)
-  {
-      transition
-      {
-	if(theRobotPose.translation.x < -3900 || theRobotPose.translation.x > -4500 || theRobotPose.translation.y < -1100 || theRobotPose.translation.y > 1100)
-      		goto goToGoaliePosition;
-      	if(libCodeRelease.timeSinceBallWasSeen() < 300)
-      		goto turnToBall;
-      }
-      action
-      {
-      theHeadControlMode = HeadControl::lookForward;
-      InWalkKick(WalkRequest::left, Pose2D(libCodeRelease.angleToGoal, -4490, 0));
-      //       WalkToTarget(70,Pose2D(libCodeRelease.angleToGoal, -4490 , 0));        
-      }
-   }
 }

@@ -9,6 +9,7 @@
 
 #include "Options/HeadControl/HeadControl.h"
 #include "Options/HeadControl/LookForward.h"
+#include "Options/HeadControl/Scan.h"
 
 #include "Options/Output/ArmMotionRequest/Arm.h"
 #include "Options/Output/ArmMotionRequest/Arms.h"

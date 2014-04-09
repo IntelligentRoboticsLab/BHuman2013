@@ -3,10 +3,9 @@ ctrl_interface_group=0
 ap_scan=1
 
 network={
-  ssid="Dutch Nao Team Wifi"
-  scan_ssid=1
-  proto=WPA2
-  key_mgmt=WPA-PSK
-  psk="sam+moos"
+  ssid="NAME OF THE NETWORK"
+  key_mgmt=NONE
+  wep_tx_keyidx=0
+  wep_key0="THE PASSWORD"
 }
 

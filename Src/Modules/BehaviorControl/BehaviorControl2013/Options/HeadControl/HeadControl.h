@@ -9,6 +9,7 @@ option(HeadControl)
     {
       case HeadControl::off: goto off;
       case HeadControl::lookForward: goto lookForward;
+      case HeadControl::scan: goto scan;
       default: goto none;
     }
   }
@@ -16,6 +17,7 @@ option(HeadControl)
   initial_state(none) {}
   state(off) {action SetHeadPanTilt(JointData::off, JointData::off, 0.f);}
   state(lookForward) {action LookForward();}
+  state(scan) {action Scan();}
 }
 
 struct HeadControl
@@ -23,7 +25,8 @@ struct HeadControl
   ENUM(Mode,
     none,
     off,
-    lookForward
+    lookForward,
+    scan
   );
 };
 
