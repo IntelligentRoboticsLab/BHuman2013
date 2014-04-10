@@ -28,7 +28,8 @@ option(Goalie)
 	action
 	{
 		theHeadControlMode = HeadControl::scan;
-		InWalkKick(WalkRequest::left, Pose2D(libCodeRelease.angleToGoal, (theFieldDimensions.xPosOwnGroundline - theRobotPose.translation.x),  -theRobotPose.translation.y));
+		//InWalkKick(WalkRequest::left, Pose2D(libCodeRelease.angleToGoal, (theFieldDimensions.xPosOwnGroundline - theRobotPose.translation.x),  -theRobotPose.translation.y));
+		WalkToTarget(Pose2D(80.f, 80.f, 80.f), Pose2D(libCodeRelease.angleToGoal, (theFieldDimensions.xPosOwnGroundline - theRobotPose.translation.x),  -theRobotPose.translation.y));
 	}
   }
   
@@ -45,7 +46,8 @@ option(Goalie)
 	action
 	{
 		theHeadControlMode = HeadControl::lookForward;
-		InWalkKick(WalkRequest::left, Pose2D(libCodeRelease.angleToGoal, theBallModel.estimate.position.x - 160.f, theBallModel.estimate.position.y - 55.f));
+		//InWalkKick(WalkRequest::left, Pose2D(libCodeRelease.angleToGoal, theBallModel.estimate.position.x - 160.f, theBallModel.estimate.position.y - 55.f));
+		WalkToTarget(Pose2D(80.f, 80.f, 80.f), Pose2D(libCodeRelease.angleToGoal, theBallModel.estimate.position.x - 160.f, theBallModel.estimate.position.y - 55.f));
 	}
   }
 
@@ -64,7 +66,7 @@ option(Goalie)
     {
       theHeadControlMode = HeadControl::lookForward;
       WalkToTarget(Pose2D(80.f, 80.f, 80.f), Pose2D(libCodeRelease.angleToGoal, theBallModel.estimate.position.x - 150.f, theBallModel.estimate.position.y - 30.f));
-    }
+	}
   }
 
   state(kick)

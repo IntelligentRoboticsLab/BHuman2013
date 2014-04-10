@@ -36,8 +36,8 @@ option(ReadyState)
     {
 		//Goalie Position = -4300, 0 
 		theHeadControlMode = HeadControl::scan;
-		//WalkToTarget(Pose2D(80.f, 80.f, 80.f), Pose2D(libCodeRelease.angleToGoal, (-4300.f - theRobotPose.translation.x), 0.f - theRobotPose.translation.y));
-		InWalkKick(WalkRequest::left, Pose2D(libCodeRelease.angleToGoal, (-4300.f - theRobotPose.translation.x), 0.f - theRobotPose.translation.y));
+		WalkToTarget(Pose2D(80.f, 80.f, 80.f), Pose2D(libCodeRelease.angleToGoal, (-4300.f - theRobotPose.translation.x), 0.f - theRobotPose.translation.y));
+		//InWalkKick(WalkRequest::left, Pose2D(libCodeRelease.angleToGoal, (-4300.f - theRobotPose.translation.x), 0.f - theRobotPose.translation.y));
 	}
   }
 
@@ -51,8 +51,8 @@ option(ReadyState)
     action
     {
 		theHeadControlMode = HeadControl::scan;
-		//WalkToTarget(Pose2D(80.f, 80.f, 80.f), Pose2D(libCodeRelease.angleToGoal, (-1280.f - theRobotPose.translation.x), 1000.f - theRobotPose.translation.y));
-		InWalkKick(WalkRequest::left, Pose2D(libCodeRelease.angleToGoal, (-200.f - theRobotPose.translation.x), 200.f - theRobotPose.translation.y));
+		WalkToTarget(Pose2D(80.f, 80.f, 80.f), Pose2D(libCodeRelease.angleToGoal, (-1280.f - theRobotPose.translation.x), 1000.f - theRobotPose.translation.y));
+		//InWalkKick(WalkRequest::left, Pose2D(libCodeRelease.angleToGoal, (-200.f - theRobotPose.translation.x), 200.f - theRobotPose.translation.y));
 	}
   }
 
@@ -66,8 +66,8 @@ option(ReadyState)
     action
     {
 		theHeadControlMode = HeadControl::scan;
-		//WalkToTarget(Pose2D(80.f, 80.f, 80.f), Pose2D(libCodeRelease.angleToGoal, (-200.f - theRobotPose.translation.x), -1500.f - theRobotPose.translation.y));
-		InWalkKick(WalkRequest::left, Pose2D(libCodeRelease.angleToGoal, (-200.f - theRobotPose.translation.x), -350.f - theRobotPose.translation.y));
+		WalkToTarget(Pose2D(80.f, 80.f, 80.f), Pose2D(libCodeRelease.angleToGoal, (-200.f - theRobotPose.translation.x), -1500.f - theRobotPose.translation.y));
+		//InWalkKick(WalkRequest::left, Pose2D(libCodeRelease.angleToGoal, (-200.f - theRobotPose.translation.x), -350.f - theRobotPose.translation.y));
 	}
   }
 
@@ -81,8 +81,8 @@ option(ReadyState)
     action
     {
 		theHeadControlMode = HeadControl::scan;
-		//WalkToTarget(Pose2D(80.f, 80.f, 80.f), Pose2D(libCodeRelease.angleToGoal, (-200.f - theRobotPose.translation.x), 0.f - theRobotPose.translation.y));
-		InWalkKick(WalkRequest::left, Pose2D(libCodeRelease.angleToGoal, (-2000.f - theRobotPose.translation.x), 100.f - theRobotPose.translation.y));
+		WalkToTarget(Pose2D(80.f, 80.f, 80.f), Pose2D(libCodeRelease.angleToGoal, (-200.f - theRobotPose.translation.x), 0.f - theRobotPose.translation.y));
+		//InWalkKick(WalkRequest::left, Pose2D(libCodeRelease.angleToGoal, (-2000.f - theRobotPose.translation.x), 100.f - theRobotPose.translation.y));
 	
 	}
   }
@@ -97,8 +97,8 @@ option(ReadyState)
     action
     {
 		theHeadControlMode = HeadControl::scan;
-		//WalkToTarget(Pose2D(80.f, 80.f, 80.f), Pose2D(libCodeRelease.angleToGoal, (-400.f - theRobotPose.translation.x), 1000.f - theRobotPose.translation.y));
-		InWalkKick(WalkRequest::left, Pose2D(libCodeRelease.angleToGoal, (-2500.f - theRobotPose.translation.x), 1500.f - theRobotPose.translation.y));
+		WalkToTarget(Pose2D(80.f, 80.f, 80.f), Pose2D(libCodeRelease.angleToGoal, (-400.f - theRobotPose.translation.x), 1000.f - theRobotPose.translation.y));
+		//InWalkKick(WalkRequest::left, Pose2D(libCodeRelease.angleToGoal, (-2500.f - theRobotPose.translation.x), 1500.f - theRobotPose.translation.y));
 	
 	}
   }
@@ -113,8 +113,8 @@ option(ReadyState)
     action
     {
 		theHeadControlMode = HeadControl::scan;
-		//WalkToTarget(Pose2D(80.f, 80.f, 80.f), Pose2D(libCodeRelease.angleToGoal, (-3300.f - theRobotPose.translation.x), -350.f - theRobotPose.translation.y));
-		InWalkKick(WalkRequest::left, Pose2D(libCodeRelease.angleToGoal, (-2500.f - theRobotPose.translation.x), -1500.f - theRobotPose.translation.y));
+		WalkToTarget(Pose2D(80.f, 80.f, 80.f), Pose2D(libCodeRelease.angleToGoal, (-3300.f - theRobotPose.translation.x), -350.f - theRobotPose.translation.y));
+		//InWalkKick(WalkRequest::left, Pose2D(libCodeRelease.angleToGoal, (-2500.f - theRobotPose.translation.x), -1500.f - theRobotPose.translation.y));
 	
 	}
   }
