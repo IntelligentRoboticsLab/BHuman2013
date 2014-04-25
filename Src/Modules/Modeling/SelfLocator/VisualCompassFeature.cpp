@@ -17,7 +17,7 @@ double VisualCompassFeature::compare(const VisualCompassFeature & other) const
     for (unsigned index = 0; index < params_->compassFeatureNum; ++index)
         for (unsigned i = 0; i < params_->colorsNum; ++i)
             for (unsigned j = 0; j < params_->colorsNum; ++j)
-                similarityMeasure += std::abs((1 - featureTable_[index][i][j]) - (1 - other.featureTable_[index][i][j]));
+                similarityMeasure += std::abs(featureTable_[index][i][j] - other.featureTable_[index][i][j]); // = abs((1-f[i,j]) - (1-f2[i,j]))
     return similarityMeasure;
 }
 
