@@ -1,5 +1,6 @@
 #pragma once
 
+#include <opencv2/core/version.hpp>
 #include <opencv2/core/core.hpp>
 #include <opencv2/ml/ml.hpp>
 
@@ -7,6 +8,8 @@
 
 //#define MODEL_TYPE_KMEANS
 #define MODEL_TYPE_EM 
+#define OLD_OPENCV CV_MAJOR_VERSION < 2 || (CV_MAJOR_VERSION == 2 && CV_MINOR_VERSION <= 3)
+#define NEW_OPENCV !OLD_OPENCV
 
 class ColorDiscretizer
 {
@@ -24,14 +27,22 @@ class ColorDiscretizer
 #if defined(MODEL_TYPE_KMEANS)
 					return isClustered_;
 #elif defined(MODEL_TYPE_EM)
+#if OLD_OPENCV
+          return isTrained_;
+#else
 					return model_.isTrained();
+#endif
 #endif
 				}
         inline void reset() {
 #if defined(MODEL_TYPE_KMEANS)
 					isClustered_ = false;
 #elif defined(MODEL_TYPE_EM)
+#if OLD_OPENCV
+          //model_ = cv::CvEM(emParams_)
+#else
 					model_ = cv::EM(clusterNum_);
+#endif
 #endif
 				}
         inline int getClusterNum() const { return clusterNum_; }
@@ -40,10 +51,16 @@ class ColorDiscretizer
     private:
         unsigned clusterNum_;
         cv::Mat clusterColors_;
-#if defined(MODEL_TYPE_EM
+#if defined(MODEL_TYPE_KMEANS)
+        bool isClustered_;
+#elif defined(MODEL_TYPE_EM)
+#if OLD_OPENCV
+        bool isTrained_;
+        cv::CvEM model_;
+#else
 				cv::EM model_;
 #endif
-        bool isClustered_;
+#endif
         inline bool checkClusters(int clusterNum) { return (clusterNum > 0) && (clusterNum_ = clusterNum); }
         void generateModel(const cv::Mat & samples); // Model-specific
 };

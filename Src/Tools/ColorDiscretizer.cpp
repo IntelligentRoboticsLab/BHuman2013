@@ -4,7 +4,12 @@
 #include <cmath>
 
 
-ColorDiscretizer::ColorDiscretizer(unsigned clusterNum) : clusterNum_(clusterNum), isClustered_(false) {
+ColorDiscretizer::ColorDiscretizer(unsigned clusterNum) : clusterNum_(clusterNum) {
+#if defined(MODEL_TYPE_KMEANS)
+  isClustered_ = false;
+#elif defined(MODEL_TYPE_EM) && OLD_OPENCV
+  isTrained_ = false;
+#endif
 }
 
 
@@ -31,7 +36,7 @@ bool ColorDiscretizer::initializeColorModel(const std::vector<Image::Pixel> &pix
 }
 
 
-std::vector<int> ColorDiscretizer::discretize(const std::vector<Image::Pixel> & pixels) {
+std::vector<int> ColorDiscretizer::discretize(const std::vector<Image::Pixel> & pixels) const {
     if (!isClustered()) return std::vector<int>(0);
 
     std::vector<int> discretizedPixels(pixels.size());
@@ -51,53 +56,62 @@ void ColorDiscretizer::generateModel(const cv::Mat &samples) {
 
     cv::kmeans(samples, clusterNum_, labels, criteria, attempts, flags, clusterColors_);
 #elif defined(MODEL_TYPE_EM)
-		model_ = cv::EM(clusterNum_);
-		model_.train(samples);
+#if OLD_OPENCV
+    cv::CvEMParams emParams(clusterNum_);
+  model_ = cv::CvEM(samples, NULL, emParams);
+#else
+  model_ = cv::EM(clusterNum_);
+  model_.train(samples);
+#endif
 #endif
 }
 
 
 unsigned ColorDiscretizer::getColorClass(float channel1, float channel2, float channel3) const {
 #if defined(MODEL_TYPE_KMEANS)
-    float minDist = INFINITY, dist;
-    unsigned minIndex = clusterNum_;
-    const cv::Vec3f *row;
+  float minDist = INFINITY, dist;
+  unsigned minIndex = clusterNum_;
+  const cv::Vec3f *row;
 
-    for (unsigned i = 0; i < clusterNum_; ++i) {
-        row = clusterColors_.ptr<cv::Vec3f>(i);
-        dist = (channel1 - (*row)[0]) * (channel1 - (*row)[0]);
-        dist += (channel2 - (*row)[1]) * (channel2 - (*row)[1]);
-        dist += (channel3 - (*row)[2]) * (channel3 - (*row)[2]);
+  for (unsigned i = 0; i < clusterNum_; ++i) {
+      row = clusterColors_.ptr<cv::Vec3f>(i);
+      dist = (channel1 - (*row)[0]) * (channel1 - (*row)[0]);
+      dist += (channel2 - (*row)[1]) * (channel2 - (*row)[1]);
+      dist += (channel3 - (*row)[2]) * (channel3 - (*row)[2]);
 
-        if (dist < minDist)
-        {
-            minDist = dist;
-            minIndex = i;
-        }
-    }
-    return minIndex;
+      if (dist < minDist)
+      {
+          minDist = dist;
+          minIndex = i;
+      }
+  }
+  return minIndex;
 #elif defined(MODEL_TYPE_EM)
-    cv::Mat sample(1, 3, CV_32F), probs(1, clusterNum_, CV_64FC1);
-		cv::Point maxLocation;
-		sample.at<float>(0, 0) = channel1;
-		sample.at<float>(0, 1) = channel2;
-		sample.at<float>(0, 2) = channel3;
-		model_.predict(sample, probs);
-		cv::minMaxLoc(probs, NULL, NULL, NULL, &maxLocation);
-		if (maxLocation.x < maxLocation.y) {
-			std::cout << "x" << std::endl;
-			return maxLocation.x;
-		}
-		else {
-			std::cout << "y" << std::endl;
-			return maxLocation.y;
-		}
+  cv::Mat sample(1, 3, CV_32F), probs(1, clusterNum_, CV_64FC1);
+  cv::Point maxLocation;
+  sample.at<float>(0, 0) = channel1;
+  sample.at<float>(0, 1) = channel2;
+  sample.at<float>(0, 2) = channel3;
+#if OLD_OPENCV
+  model_.predict(sample, &probs);
+#else
+  model_.predict(sample, probs);
+#endif
+  cv::minMaxLoc(probs, NULL, NULL, NULL, &maxLocation);
+  if (maxLocation.x < maxLocation.y) {
+    std::cout << "x" << std::endl;
+    return maxLocation.x;
+  }
+  else {
+    std::cout << "y" << std::endl;
+    return maxLocation.y;
+  }
 #endif
 }
 
 
 void ColorDiscretizer::saveClusters(const std::string & fileName) {
-    if (!isClustered()) return;
+  if (!isClustered()) return;
 
 #if defined(MODEL_TYPE_KMEANS)
     std::ofstream outBinFile;
